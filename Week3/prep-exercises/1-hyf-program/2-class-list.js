@@ -12,10 +12,28 @@ import { modules, students, mentors, classes } from "./hyf.js";
  *  [{ name: 'John', role: 'student' }, { name: 'Mary', role: 'mentor' }]
  */
 const getPeopleOfClass = (className) => {
-  // TODO complete this function
+  const currentClass = classes.find((classInfo) => classInfo.name === className);
+
+  if (!currentClass) {
+    return 'Class not found';
+  }
+
+  const studentsInClass = students
+    .filter((student) => student.class === className)
+    .map((student) => ({ name: student.name, role: 'student' }));
+
+  const mentorsInClass = mentors
+    .filter(
+      (mentor) =>
+        mentor.nowTeaching === className ||
+        (mentor.nowTeaching  === currentClass.currentModule)
+    )
+    .map((mentor) => ({ name: mentor.name, role: 'mentor' }));
+
+  return [...studentsInClass, ...mentorsInClass];
 };
-// You can uncomment out this line to try your function
-// console.log(getPeopleOfClass('class34'));
+
+ console.log(getPeopleOfClass('class34'));
 
 /**
  * We would like to have a complete overview of the current active classes.
@@ -30,7 +48,30 @@ const getPeopleOfClass = (className) => {
  *  }
  */
 const getActiveClasses = () => {
-  // TODO complete this function
+  const activeClasses = classes.filter((cls) => cls.active);
+
+  const result = {};
+
+  activeClasses.forEach((classInfo) => {
+    const { name: className, currentModule } = classInfo;
+    const peopleInClass = [];
+
+    students.forEach((student) => {
+      if (student.class === className) {
+        peopleInClass.push({ name: student.name, role: 'student' });
+      }
+    });
+
+    mentors.forEach((mentor) => {
+      if (mentor.canTeach && mentor.canTeach.includes(currentModule)) {
+        peopleInClass.push({ name: mentor.name, role: 'mentor' });
+      }
+    });
+
+    result[className] = peopleInClass;
+  });
+
+  return result;
 };
-// You can uncomment out this line to try your function
-// console.log(getActiveClasses());
+
+ console.log(getActiveClasses());
