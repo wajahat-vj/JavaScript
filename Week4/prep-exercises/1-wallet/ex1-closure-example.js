@@ -1,5 +1,4 @@
 import eurosFormatter from "./euroFormatter.js";
-
 /**
  * This is the closure way of doing things and we have already completed it for you so you don't need to do anything.
  * We leave it here as an example of how your other implementations should work!
